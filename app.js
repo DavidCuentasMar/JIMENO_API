@@ -9,7 +9,8 @@ const reservationRoutes = require('./api/routes/reservations');
 const userRoutes = require('./api/routes/users');
 
 //mongoose.connect('mongodb://dacuentas:'+process.env.MLABPASS+'@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
-mongoose.connect('mongodb://USER:PASS@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
+//mongoose.connect('mongodb://USER:PASS@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
+mongoose.connect('mongodb://will:will123@ds249249.mlab.com:49249/databasejs',{useNewUrlParser: true})
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended:false}));
@@ -29,6 +30,7 @@ app.use((req,res,next) => {
 app.use('/hotels', hotelRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/users', userRoutes);
+
 app.use((req,res,next)=>{
 	const error = new Error('NOT FOUND');
 	error.status=404;

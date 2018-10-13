@@ -66,4 +66,19 @@ router.get('/:hotel_name', (req, res, next) => {
 	
 });
 
+router.get('/', (req, res, next) => {
+	const id = req.params.productId;
+	if(id=='special'){
+		res.status(200).json({
+			message: 'GET HOTELS',
+			id : id
+		});	
+	}else{
+		res.status(200).json({
+			message: 'some ID'
+		});
+	}
+	
+});
+
 module.exports = router;

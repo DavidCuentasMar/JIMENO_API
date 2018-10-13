@@ -24,7 +24,7 @@ router.post('/CreateUser', (req, res, next) => {
 	})
 });
 
-router.post('/UpdateUser', (req, res, next) => {
+/*router.post('/UpdateUser', (req, res, next) => {
 	user_to_update = new User();
 	field1 = req.body.field1
 	valuefield1=req.body.valuefield1
@@ -54,7 +54,7 @@ router.post('/UpdateUser', (req, res, next) => {
 	res.status(200).json({
 			ERROR: '404'
 		}));
-});
+});*/
 
 
 
