@@ -9,7 +9,7 @@ const reservationRoutes = require('./api/routes/reservations');
 const userRoutes = require('./api/routes/users');
 
 //mongoose.connect('mongodb://dacuentas:'+process.env.MLABPASS+'@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
-mongoose.connect('mongodb://USER:PASS@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
+mongoose.connect('mongodb://dacuentas:dacuentas007@ds025419.mlab.com:25419/databasejs',{ useNewUrlParser: true });
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended:false}));

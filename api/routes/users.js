@@ -25,34 +25,47 @@ router.post('/CreateUser', (req, res, next) => {
 });
 
 router.post('/UpdateUser', (req, res, next) => {
-	user_to_update = new User();
-	field1 = req.body.field1
-	valuefield1=req.body.valuefield1
-	field2 = req.body.field2
-	valuefield2=req.body.valuefield2
-	field3 = req.body.field3
-	valuefield3=req.body.valuefield3
-	field4 = req.body.field4
-	valuefield4=req.body.valuefield4
-	field5 = req.body.field5
-	valuefield5=req.body.valuefield5
-	query=field1:valuefield1,field2:valuefield2,field3:valuefield3,field4:valuefield4,field5:valuefield5;
-
+	x = 0;
+	var jsonString='{"';
+	for (var key in req.body) {
+    	if(x>1){
+    		if(x%2==0){
+    			item = req.body[key];
+    			//console.log(item);
+    			jsonString=jsonString+item+'":"'
+    		}else{
+    			item = req.body[key];
+    			jsonString=jsonString+item+'","'
+    		}
+    		
+    	}
+    	x++;
+	}
+	jsonString=jsonString.substring(0,jsonString.length-2)+'}'
+	//console.log(jsonString)
+	var obj = JSON.parse(jsonString);
 	User.findOneAndUpdate(
 		{
 			'_id':req.body.id,
 			'password':req.body.password
 		},
 		{
-			"$set":{}
+			"$set":obj
 		}
 	).then(result=>{
-		res.status(200).json({
-			name : result.name
-		});
+		if (result==null) {
+			res.status(200).json({
+				successful : 0
+			});
+		}else{
+			res.status(200).json({
+				successful : 1
+			});
+		}
+		
 	}).catch(err=>
 	res.status(200).json({
-			ERROR: '404'
+			successful: 0
 		}));
 });
 
