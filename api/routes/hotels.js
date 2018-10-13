@@ -28,18 +28,19 @@ router.get('/', (req, res, next) => {
 
 router.post('/findHotel',(req,res,next) =>{
 	var jsonString="";
-	if (req.body.field==='MAX_ROOMS'){
+	if (req.body.field==='SIZE'){
 		if(req.body.fieldValue==='small'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"10","$lt":"50"}}';
+			jsonString = '{"SIZE":{ "$gte":"10","$lt":"50"}}';
 		}
 		if(req.body.fieldValue==='medium'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"51","$lt":"100"}}';
+			jsonString = '{"SIZE":{ "$gte":"51","$lt":"100"}}';
 
 		}
 		if(req.body.fieldValue==='large'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"100"}}';
+			jsonString = '{"SIZE":{ "$gte":"100"}}';
 		}
 	}else{
+		//location implementation
 		jsonString = '{"'+req.body.field+'":"'+req.body.fieldValue+'"}';
 	}
 	Hotel.find(JSON.parse(jsonString)).then(result=>{

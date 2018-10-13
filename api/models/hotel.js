@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const HotelSchema = mongoose.Schema({   
  	CURRENT_ROOMS: Number,
- 	MAX_ROOMS: Number,
+ 	SIZE: Number,
  	HOTEL_NAME: String,
  	ADDRESS: String,
  	STATE: String,

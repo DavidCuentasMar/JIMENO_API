@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Hotel = require('../models/hotel');
+const Reservation = require('../models/reservation');
 
 
 router.get('/',(req,res,next) =>{
@@ -31,9 +32,6 @@ router.post('/reserve',(req,res,next) =>{
 	Hotel.find(JSON.parse(jsonString)).then(result=>{
 		res.status(200).json(result);
 	})
-
-
-
 });
 
 module.exports = router;
