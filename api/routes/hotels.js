@@ -125,63 +125,109 @@ router.get('/', (req, res, next) => {
 })
 
 //Update a hotel by Id	
-router.put('/update/:hotelId',(req, res, next) => {
-    
-    //Aqui voy a validar la API key 
-    if(!req.params.hotelId) {
-        return res.status(401).send({
-            message: "hotel id can not be empty"
-        });
-    }
+router.put('/update/:hotelId/:userApiKey',(req, res, next) => {
+    if(!req.params.userApiKey){
+		return res.status(400).send({
+			message: "it is require the apiKey"
+		})
+	}else{
+		ApiKey.findById(req.params.userApiKey).then(user =>{
+			if(!user) {
+            	return res.status(404).send({
+	                message: "user apiKey is invalid"
+	            });
+	        }
+	        //start update Hotel
+	        if(!req.params.hotelId) {
+		        return res.status(401).send({
+		            message: "hotel id can not be empty"
+		        });
+		    }
 
-    // Find hotel and update it with the request body
-    Hotel.findByIdAndUpdate(req.params.hotelId, {
-        TYPE: req.body.type, 
-        ROOMS: req.body.rooms, 
-        PHONE:req.body.phone, 
-        WEBSITE: req.body.website, 
-        EMAIL_ID: req.body.email_id
-    }, {new: true})
-    .then(hotel => {
-        if(!hotel) {
-            return res.status(404).send({
-                message: "hotel not found with id " + req.params.hotelId
-            });
-        }
-        res.send(hotel);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Hotel not found with id " + req.params.hotelId
-            });                
-        }
-        return res.status(500).send({
-            message: "Error updating hotel with id " + req.params.hotelId
-        });
-    });
+		    // Find hotel and update it with the request body
+		    Hotel.findByIdAndUpdate(req.params.hotelId, {
+		        TYPE: req.body.type, 
+		        ROOMS: req.body.rooms, 
+		        PHONE:req.body.phone, 
+		        WEBSITE: req.body.website, 
+		        EMAIL_ID: req.body.email_id
+		    }, {new: true})
+		    .then(hotel => {
+		        if(!hotel) {
+		            return res.status(404).send({
+		                message: "hotel not found with id " + req.params.hotelId
+		            });
+		        }
+		        res.send(hotel);
+		    }).catch(err => {
+		        if(err.kind === 'ObjectId') {
+		            return res.status(404).send({
+		                message: "Hotel not found with id " + req.params.hotelId
+		            });                
+		        }
+		        return res.status(500).send({
+		            message: "Error updating hotel with id " + req.params.hotelId
+		        });
+		    });
+		    //finish update
+	    }).catch(err => {
+	        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+	            return res.status(404).send({
+	                message: "a erro has ocurred and user apikey not found, please try again"
+	            });                
+	        }
+	        return res.status(500).send({
+	            message: "Could not delete not found, please try again"
+	        });
+		})
+	}
+
 });
 
 //Delete a hotel by id
-router.delete('/delete/:hotelId',(req, res, next) => {
-    
-    Hotel.findByIdAndRemove(req.params.hotelId)
-    .then(hotel => {
-        if(!hotel) {
-            return res.status(404).send({
-                message: "Hotel not found with id " + req.params.hotelId
-            });
-        }
-        res.send({message: "Hotel deleted successfully!"});
-    }).catch(err => {
-        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-            return res.status(404).send({
-                message: "Hotel not found with id " + req.params.hotelId
-            });                
-        }
-        return res.status(500).send({
-            message: "Could not delete Hotel with id " + req.params.hotelId
-        });
-    });
+router.delete('/delete/:hotelId/:userApiKey',(req, res, next) => {
+    if(!req.params.userApiKey){
+		return res.status(400).send({
+			message: "it is require the apiKey"
+		})
+	}else{
+		ApiKey.findById(req.params.userApiKey).then(user =>{
+			if(!user) {
+            	return res.status(404).send({
+	                message: "user apiKey is invalid"
+	            });
+	        }
+	       	//start delete hotel
+		    Hotel.findByIdAndRemove(req.params.hotelId)
+		    .then(hotel => {
+		        if(!hotel) {
+		            return res.status(404).send({
+		                message: "Hotel not found with id " + req.params.hotelId
+		            });
+		        }
+		        res.send({message: "Hotel deleted successfully!"});
+		    }).catch(err => {
+		        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+		            return res.status(404).send({
+		                message: "Hotel not found with id " + req.params.hotelId
+		            });                
+		        }
+		        return res.status(500).send({
+		            message: "Could not delete Hotel with id " + req.params.hotelId
+		        });
+		    });
+		    //finish hotel
+	    }).catch(err => {
+	        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+	            return res.status(404).send({
+	                message: "a erro has ocurred and user apikey not found, please try again"
+	            });                
+	        }
+	        return res.status(500).send({
+	            message: "Could not delete not found, please try again"
+	        });
+		})
+	}
 });
 
 // Create and Save a new Hotel
@@ -197,6 +243,7 @@ router.post('/create/:userApiKey', (req, res, next) => {
 	                message: "user apiKey is invalid"
 	            });
 	        }
+	        //start create hotel
 	        if(!req.body.hotel_name && !req.body.rooms &&
 		    	!req.body.address && !req.body.type)
 	        {
@@ -226,6 +273,7 @@ router.post('/create/:userApiKey', (req, res, next) => {
 		            message: err.message || "Some error occurred while creating the hotel."
 		        });
 		    });
+		    //finish create
 	    }).catch(err => {
 	        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
 	            return res.status(404).send({
@@ -240,3 +288,5 @@ router.post('/create/:userApiKey', (req, res, next) => {
 });
 
 module.exports = router;
+
+	
