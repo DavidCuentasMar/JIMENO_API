@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/CreateUser', (req, res, next) => {
-	var user_to_create = new User();
+	var user_to_create = new User()
 	user_to_create.password = req.body.password;
 	user_to_create.email = req.body.email;
 	user_to_create.name = req.body.name;
@@ -20,9 +20,9 @@ router.post('/CreateUser', (req, res, next) => {
 	user_to_create.collection.insertOne(user_to_create).then(result=>{
 	res.status(200).json({
 		userId: user_to_create.id
-	});
 	})
-});
+	})
+})
 
 
 router.post('/UpdateUser', (req, res, next) => {

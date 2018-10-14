@@ -76,8 +76,7 @@ router.post('/setLocation',(req,res,next) =>{
 	                	const coordinates = JSON.parse(data).Response.View[0].Result[0].Location.NavigationPosition[0];
 	           	       	console.log(coordinates)
 	           	       	hotelToUpdate.collection.update({address: hotel.address},{ longitud: coordinates.Longitud, latitude: coordinates.Latitude }, (err) => {
-	           	       		if(err){
-	           	       			
+	           	       		if(err){         	       			
 	           	       			console.log(err)
 	           	       		}
 	           	       	})    
@@ -125,6 +124,99 @@ router.get('/', (req, res, next) => {
 		});
 	}
 	
+})
+
+//Update a hotel by Id	
+router.put('/update/:hotelId',(req, res, next) => {
+    
+    //Aqui voy a validar la API key 
+    if(!req.params.hotelId) {
+        return res.status(401).send({
+            message: "hotel id can not be empty"
+        });
+    }
+
+    // Find hotel and update it with the request body
+    Hotel.findByIdAndUpdate(req.params.hotelId, {
+        TYPE: req.body.type, 
+        ROOMS: req.body.rooms, 
+        PHONE:req.body.phone, 
+        WEBSITE: req.body.website, 
+        EMAIL_ID: req.body.email_id
+    }, {new: true})
+    .then(hotel => {
+        if(!hotel) {
+            return res.status(404).send({
+                message: "hotel not found with id " + req.params.hotelId
+            });
+        }
+        res.send(hotel);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Hotel not found with id " + req.params.hotelId
+            });                
+        }
+        return res.status(500).send({
+            message: "Error updating hotel with id " + req.params.hotelId
+        });
+    });
+});
+
+//Delete a hotel by id
+router.delete('/delete/:hotelId',(req, res, next) => {
+    
+    Hotel.findByIdAndRemove(req.params.hotelId)
+    .then(hotel => {
+        if(!hotel) {
+            return res.status(404).send({
+                message: "Hotel not found with id " + req.params.hotelId
+            });
+        }
+        res.send({message: "Hotel deleted successfully!"});
+    }).catch(err => {
+        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "Hotel not found with id " + req.params.hotelId
+            });                
+        }
+        return res.status(500).send({
+            message: "Could not delete Hotel with id " + req.params.hotelId
+        });
+    });
+});
+
+// Create and Save a new Hotel
+router.post('/create', (req, res, next) => {
+    if(!req.body.hotel_name && !req.body.rooms &&
+    	!req.body.address && !req.body.type 
+    	) {
+        return res.status(400).send({
+            message: "fields can not be empty"
+        });
+    }
+    // Create a Hotel all the field
+    const hotel = new Hotel({
+        ROOMS: req.body.rooms,
+        HOTEL_NAME: req.body.hotel_name,
+        ADDRESS : req.body.address,
+        STATE : req.body.state,
+        PHONE : req.body.phone,
+        FAX : req.body.fax,
+        EMAIL_ID : req.body.email_id,
+        WEBSITE : req.body.website,
+        TYPE : req.body.type
+    })
+
+    // Save Hotel in the database
+    hotel.save()
+    .then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating the hotel."
+        });
+    });
 });
 
 module.exports = router;
