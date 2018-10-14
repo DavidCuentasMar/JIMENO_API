@@ -1,0 +1,410 @@
+{
+	"info": {
+		"_postman_id": "0db76893-0188-4738-8471-303a92714013",
+		"name": "JIMENO_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Show All Reservations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "initial_date",
+							"value": "2018-08-06",
+							"type": "text"
+						},
+						{
+							"key": "end_date",
+							"value": "2018-08-012",
+							"type": "text"
+						},
+						{
+							"key": "hotel_name",
+							"value": "Raheem Residency",
+							"type": "text"
+						},
+						{
+							"key": "number_rooms",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "open",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/reservations",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show All Hotes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:3000/hotels/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetupDB",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:3000/hotels/SetupDB",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						"SetupDB"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Hotel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "field",
+							"value": "MAX_ROOMS",
+							"type": "text"
+						},
+						{
+							"key": "fieldValue",
+							"value": "large",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/hotels/findHotel",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						"findHotel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/users/CreateUser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"CreateUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create hotel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "rooms",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "one star",
+							"type": "text"
+						},
+						{
+							"key": "hotel_name",
+							"value": "will house",
+							"type": "text"
+						},
+						{
+							"key": "email_id",
+							"value": "will",
+							"type": "text"
+						},
+						{
+							"key": "state",
+							"value": "colombia",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "mi casa",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "se lo robaron ",
+							"type": "text"
+						},
+						{
+							"key": "fax",
+							"value": "tambien",
+							"type": "text"
+						},
+						{
+							"key": "website",
+							"value": "www.mywebsite.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotels/create/5bc37de4c9befe02a05510ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						"create",
+						"5bc37de4c9befe02a05510ad"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Apikey Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "contact_name",
+							"value": "david",
+							"type": "text"
+						},
+						{
+							"key": "company",
+							"value": "your house",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "will@g.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/apikey/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"apikey",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Hotel",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "type",
+							"value": "posada",
+							"type": "text"
+						},
+						{
+							"key": "rooms",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "email_id",
+							"value": "akies@eso.com",
+							"type": "text"
+						},
+						{
+							"key": "website",
+							"value": "notenemos.com",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "no funciona",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotels/update/5bc2944fbec1c61fac55572a/5bc37de4c9befe02a05510ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						"update",
+						"5bc2944fbec1c61fac55572a",
+						"5bc37de4c9befe02a05510ad"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Hotel",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotels/delete/5bc2944fbec1c61fac55572a/5bc37de4c9befe02a05510ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels",
+						"delete",
+						"5bc2944fbec1c61fac55572a",
+						"5bc37de4c9befe02a05510ad"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
