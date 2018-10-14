@@ -11,6 +11,8 @@ const HotelSchema = mongoose.Schema({
  	EMAIL_ID: String,
  	WEBSITE: String,
  	TYPE: String,
+ 	LATITUDE: String,
+ 	LONGITUDE: String
 });
 
 module.exports = mongoose.model('Hotel', HotelSchema);

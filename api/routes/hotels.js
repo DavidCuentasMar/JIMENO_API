@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Hotel = require('../models/hotel');
+const https = require('https');
 
 var XLSX = require('xlsx')
 
@@ -27,6 +28,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/findHotel',(req,res,next) =>{
+	console.log(req.body.field)
 	var jsonString="";
 	if (req.body.field==='SIZE'){
 		if(req.body.fieldValue==='small'){
@@ -41,16 +43,59 @@ router.post('/findHotel',(req,res,next) =>{
 		}
 	}else{
 		//location implementation
+		if(req.body.field === 'location'){
+			//req.body.latitude
+			//req.body.longitude
+			//req.body.range
+		}
 		jsonString = '{"'+req.body.field+'":"'+req.body.fieldValue+'"}';
 	}
 	Hotel.find(JSON.parse(jsonString)).then(result=>{
 		res.status(200).json(result);
 	})
-
-
-
 });
 
+
+router.post('/setLocation',(req,res,next) =>{
+
+	Hotel.find({}).exec().then((docs)=>{
+		docs.forEach( (hotel,index)=>{
+			//remplaza globalmente el caracter ["] por '' un espacio vacio
+			const address1 = hotel.address.replace(/["]+/g, '')
+	        let url = "https://geocoder.api.here.com/6.2/geocode.json?app_id=Kpl9fHfMKSTk6nWKAjd2&app_code=SuoEITqjybbSiqMbjHfvVw&searchtext=";
+			//remplaza globalmente el caracter	
+			https.get(url + address1, (resp) => { 
+	            let data = ''
+	            resp.on('data', (chunk) => {
+	                data += chunk
+	            });
+	            resp.on('end', () => {
+	                try {
+	                	hotelToUpdate = new Hotel()
+	                	JSON.parse(data).Response.View.length;
+	                	const coordinates = JSON.parse(data).Response.View[0].Result[0].Location.NavigationPosition[0];
+	           	       	console.log(coordinates)
+	           	       	hotelToUpdate.collection.update({address: hotel.address},{ longitud: coordinates.Longitud, latitude: coordinates.Latitude }, (err) => {
+	           	       		if(err){
+	           	       			
+	           	       			console.log(err)
+	           	       		}
+	           	       	})    
+	                } catch(e) {
+
+	                }
+	        	})
+	        })
+		})
+	}).catch(err=>
+		res.status(200).json({
+			successful: 0
+	}));
+
+	res.status(200).json({
+		message: 'latitude and longitude update'
+	}) 
+})
 
 router.get('/:hotel_name', (req, res, next) => {
 	const id = req.params.productId;
