@@ -13,25 +13,82 @@ router.get('/',(req,res,next) =>{
 	});
 });
 
-router.post('/reserve',(req,res,next) =>{
-	var jsonString="";
-	if (req.body.field==='MAX_ROOMS'){
-		if(req.body.fieldValue==='small'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"10","$lt":"50"}}';
-		}
-		if(req.body.fieldValue==='medium'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"51","$lt":"100"}}';
+router.post('/CreateReservation',(req,res,next) =>{
 
+	Hotel.find({HOTEL_NAME:req.body.hotel_name,CURRENT_ROOMS:{$gte:req.body.rooms}}).then(hotelr=>{
+		if(hotelr.length!=0){
+			var aux = JSON.stringify(hotelr)
+			var hobj = JSON.parse(aux);
+			console.log()
+
+			var reserve_to_create = new Reservation();
+			var x = 0;
+			Reservation.find({hotel_name:req.body.hotel_name}
+				).then(result=>{
+				//console.log(result);
+				var i;
+				var y = 0;
+				var roomsR=0;
+				for (i = 0; i < result.length; i++) { 
+		    		var x = JSON.stringify(result[i])
+		    		var obj = JSON.parse(x);
+						//console.log(obj)
+		    			//console.log(parseInt(req.body.endDate)<=parseInt(obj.end_Date))
+		    			//console.log(parseInt(req.body.initDate)>=parseInt(obj.init_Date))
+		    			
+		    		if((((parseInt(req.body.initDate)<=parseInt(obj.end_Date)) && (parseInt(req.body.initDate)>=parseInt(obj.init_Date))) || (parseInt(req.body.endDate)<=parseInt(obj.end_Date)) && (parseInt(req.body.endDate)>=parseInt(obj.end_Date)))) {
+		    			y=1;
+		    		}
+				}
+				if (y!=0 || (hobj[0].CURRENT_ROOMS-parseInt(req.body.rooms))<0){
+					res.status(200).json({
+						error: 'no se puede hacer la reseva en los dias especificados'
+					})
+				}else{
+					reserve_to_create.hotel_name=req.body.hotel_name;
+					reserve_to_create.init_Date=req.body.initDate;
+					reserve_to_create.end_Date=req.body.endDate;
+					reserve_to_create.save(reserve_to_create).then(r=>{
+						var hotel_to_update = new Hotel();
+						var roomsA = parseInt(hobj[0].CURRENT_ROOMS-parseInt(req.body.rooms));
+						Hotel.updateOne({'hotel_name':hobj.hotel_name},{CURRENT_ROOMS:roomsA},function(err, res){
+							if (err) throw err;
+    							console.log("1 document updated");
+						});
+
+						res.status(200).json({
+							reservationID: reserve_to_create.id
+						})
+			
+						
+
+					}).catch(err=>
+						res.status(200).json({
+							error: 'no se pudo crear reserva'
+						}))
+					
+
+				}
+
+
+
+			}).catch(err=>
+				res.status(200).json({
+					error: 'reservas get error'
+				}))
+
+		}else{
+			throw new Error('hotel does not exist');
 		}
-		if(req.body.fieldValue==='large'){
-			jsonString = '{"MAX_ROOMS":{ "$gte":"100"}}';
-		}
-	}else{
-		jsonString = '{"'+req.body.field+'":"'+req.body.fieldValue+'"}';
-	}
-	Hotel.find(JSON.parse(jsonString)).then(result=>{
-		res.status(200).json(result);
-	})
+			
+		}).catch(err=>
+			res.status(200).json({
+				error: 'find hotel'
+			}))
+
+
+
+	
 });
 
 module.exports = router;

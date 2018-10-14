@@ -40,6 +40,7 @@ router.post('/findHotel',(req,res,next) =>{
 			jsonString = '{"SIZE":{ "$gte":"100"}}';
 		}
 	}else{
+		
 		jsonString = '{"'+req.body.field+'":"'+req.body.fieldValue+'"}';
 	}
 	Hotel.find(JSON.parse(jsonString)).then(result=>{

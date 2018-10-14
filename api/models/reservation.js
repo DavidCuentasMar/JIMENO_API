@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const ReservationSchema = mongoose.Schema({   
- 	init_date: String,
- 	end_date: String,
+ 	init_Date: String,
+ 	end_Date: String,
  	hotel_name: String,
 });
 
-module.exports = mongoose.model('Reservaton', ReservationSchema);
+module.exports = mongoose.model('Reservation', ReservationSchema);
