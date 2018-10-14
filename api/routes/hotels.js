@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Hotel = require('../models/hotel');
 const https = require('https');
+const ApiKey = require('../models/apikey')
 
 var XLSX = require('xlsx')
 
@@ -56,7 +57,7 @@ router.post('/findHotel',(req,res,next) =>{
 });
 
 
-router.post('/setLocation',(req,res,next) =>{
+router.post('/<se></se>tlocation',(req,res,next) =>{
 
 	Hotel.find({}).exec().then((docs)=>{
 		docs.forEach( (hotel,index)=>{
@@ -86,10 +87,7 @@ router.post('/setLocation',(req,res,next) =>{
 	        	})
 	        })
 		})
-	}).catch(err=>
-		res.status(200).json({
-			successful: 0
-	}));
+	})
 
 	res.status(200).json({
 		message: 'latitude and longitude update'
@@ -187,36 +185,58 @@ router.delete('/delete/:hotelId',(req, res, next) => {
 });
 
 // Create and Save a new Hotel
-router.post('/create', (req, res, next) => {
-    if(!req.body.hotel_name && !req.body.rooms &&
-    	!req.body.address && !req.body.type 
-    	) {
-        return res.status(400).send({
-            message: "fields can not be empty"
-        });
-    }
-    // Create a Hotel all the field
-    const hotel = new Hotel({
-        ROOMS: req.body.rooms,
-        HOTEL_NAME: req.body.hotel_name,
-        ADDRESS : req.body.address,
-        STATE : req.body.state,
-        PHONE : req.body.phone,
-        FAX : req.body.fax,
-        EMAIL_ID : req.body.email_id,
-        WEBSITE : req.body.website,
-        TYPE : req.body.type
-    })
+router.post('/create/:userApiKey', (req, res, next) => {
+	if(!req.params.userApiKey){
+		return res.status(400).send({
+			message: "it is require the apiKey"
+		})
+	}else{
+		ApiKey.findById(req.params.userApiKey).then(user =>{
+			if(!user) {
+            	return res.status(404).send({
+	                message: "user apiKey is invalid"
+	            });
+	        }
+	        if(!req.body.hotel_name && !req.body.rooms &&
+		    	!req.body.address && !req.body.type)
+	        {
+		        return res.status(400).send({
+		            message: "fields can not be empty"
+		        });
+		    }
+		    // Create a Hotel all the field
+		    const hotel = new Hotel({
+		        ROOMS: req.body.rooms,
+		        HOTEL_NAME: req.body.hotel_name,
+		        ADDRESS : req.body.address,
+		        STATE : req.body.state,
+		        PHONE : req.body.phone,
+		        FAX : req.body.fax,
+		        EMAIL_ID : req.body.email_id,
+		        WEBSITE : req.body.website,
+		        TYPE : req.body.type
+		    })
 
-    // Save Hotel in the database
-    hotel.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the hotel."
-        });
-    });
+		    // Save Hotel in the database
+		    hotel.save()
+		    .then(data => {
+		        res.send(data);
+		    }).catch(err => {
+		        res.status(500).send({
+		            message: err.message || "Some error occurred while creating the hotel."
+		        });
+		    });
+	    }).catch(err => {
+	        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+	            return res.status(404).send({
+	                message: "a erro has ocurred and user apikey not found, please try again"
+	            });                
+	        }
+	        return res.status(500).send({
+	            message: "Could not delete not found, please try again"
+	        });
+		})
+	}   
 });
 
 module.exports = router;

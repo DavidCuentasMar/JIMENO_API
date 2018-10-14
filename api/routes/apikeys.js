@@ -25,7 +25,7 @@ router.post('/create', (req, res, next) => {
     .then(data => {
     	//const userApiKey = data.id
         res.status(200).send({
-        	message: 'your new apiKey is: ' 
+        	message: 'congratulations '+data.contact_name+'your new apiKey is: ' + data.id  
         })
     }).catch(err => {
         res.status(500).send({
