@@ -24,6 +24,7 @@ router.post('/CreateUser', (req, res, next) => {
 	})
 });
 
+
 router.post('/UpdateUser', (req, res, next) => {
 	x = 0;
 	var jsonString='{"';
